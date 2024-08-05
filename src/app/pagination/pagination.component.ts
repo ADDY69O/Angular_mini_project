@@ -13,7 +13,10 @@ import { PostService } from '../post.service';
 export class PaginationComponent implements OnInit {
   @ViewChild('postsContainer', { static: true }) postsContainer!: ElementRef;
   @ViewChild('paginationContainer', { static: true }) paginationContainer!: ElementRef;
-  posts: any[] = [];
+
+  
+
+  posts  : any[] = [];
   totalPosts: number = 0;
   pageSize: number = 10;
   currentPage: number = 1;
@@ -95,15 +98,25 @@ export class PaginationComponent implements OnInit {
 
   prevPage(): void {
     if (this.currentPage > 1) {
-      this.currentPage--;
-      this.loadPosts();
+      this.currentPage-=1;
+      console.log(this.currentPage)
+      if (!this.currentPagesIn.includes(this.currentPage)) {
+        this.loadPosts(true);
+      } else {
+        this.adjustScroll();
+      }
+      
     }
   }
 
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      this.loadPosts();
+      this.currentPage+=1;
+      if (!this.currentPagesIn.includes(this.currentPage)) {
+        this.loadPosts(true);
+      } else {
+        this.adjustScroll();
+      }
     }
   }
 
@@ -182,7 +195,7 @@ export class PaginationComponent implements OnInit {
     const pageHeight = container.scrollHeight / this.currentPagesIn.length;
     const index = this.getIndex(this.currentPagesIn, this.currentPage);
     console.log(container.scrollHeight + " scH " + pageHeight * (index) + "req Height" + " current height " + (container.scrollTop) + " " + this.currentPage);
-    container.scrollTop = (pageHeight * index) + 10;
+    container.scrollTop = (pageHeight * index) + 20;
   }
 
   adjustPaginationScroll(): void {
@@ -199,6 +212,7 @@ export class PaginationComponent implements OnInit {
     const totalData = this.totalPosts;
     console.log(prevPageSize+ "psss")
     const loadedRecords = this.currentPagesIn.length * prevPageSize;
+    console.log(loadedRecords)
     const newTotalPages = Math.ceil(totalData / newLimit);
     const remainder = loadedRecords % newLimit;
 
@@ -207,10 +221,11 @@ export class PaginationComponent implements OnInit {
 
     if(loadedRecords < newLimit){
 
-      let remainingRecord = loadedRecords % newLimit;
+      let remainingRecord = newLimit % loadedRecords;
       
       this.loadPosts(true,true,remainingRecord,loadedRecords )
-      
+      newPages.push(1);
+      this.currentPage =1;
 
 
     }
@@ -239,6 +254,8 @@ export class PaginationComponent implements OnInit {
 
     this.currentPagesIn = newPages
     this.pageSize = newLimit;
+    this.currentPage = this.currentPagesIn[this.currentPagesIn.length-1]
+    this.adjustScroll()
     console.log('New Pages:', this.currentPagesIn);
   }
 }
