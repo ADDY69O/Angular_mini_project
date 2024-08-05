@@ -1,10 +1,11 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PostService } from '../post.service';
 import { PostsService, ProductResponse, PostResponse } from '../services/api-calling.service';
 import { APIResponse } from '../services/api.service';
-import { Observable } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';  // Import debounceTime from rxjs
+import { fromEvent, Subscription, timer } from 'rxjs';
 
 @Component({
   selector: 'app-pagination',
@@ -13,7 +14,7 @@ import { Observable } from 'rxjs';
   templateUrl: './pagination.component.html',
   styleUrls: ['./pagination.component.css']
 })
-export class PaginationComponent implements OnInit {
+export class PaginationComponent implements OnInit, OnDestroy {
   @ViewChild('postsContainer', { static: true }) postsContainer!: ElementRef;
   @ViewChild('paginationContainer', { static: true }) paginationContainer!: ElementRef;
 
@@ -26,20 +27,29 @@ export class PaginationComponent implements OnInit {
   pages: number[] = [];
   currentPagesIn: number[] = [];
   loading: boolean = false;
+  private scrollSubscription!: Subscription;
 
   constructor(private postService: PostService, private apiService: PostsService) {}
 
   ngOnInit(): void {
     this.loadPosts();
-    this.postsContainer.nativeElement.addEventListener('scroll', this.onScroll.bind(this));
+    // Debounce the scroll event handler
+    const scroll$ = fromEvent(this.postsContainer.nativeElement, 'scroll');
+    this.scrollSubscription = scroll$.pipe(
+      debounceTime(300)  // Debounce with a delay of 300ms
+    ).subscribe(() => this.onScroll());
   }
 
-  // Method to get the title of a post
+  ngOnDestroy(): void {
+    if (this.scrollSubscription) {
+      this.scrollSubscription.unsubscribe();
+    }
+  }
+
   getPostTitle(post: PostResponse): string {
     return post.title || '';
   }
 
-  // Method to get the body of a post
   getPostBody(post: PostResponse): string {
     return post.body || '';
   }
@@ -75,9 +85,12 @@ export class PaginationComponent implements OnInit {
           this.addPageToCurrentPages(this.currentPage);
         }
 
-        this.adjustPaginationScroll();
-        this.adjustScroll();
-        this.loading = false;
+        // Delay the scroll adjustment to ensure data is loaded
+        setTimeout(() => {
+          this.adjustPaginationScroll();
+          this.adjustScroll();
+          this.loading = false;
+        }, 0);
       },
       (error) => {
         console.error('Error loading posts:', error);
@@ -148,6 +161,7 @@ export class PaginationComponent implements OnInit {
   onScroll(): void {
     const container = this.postsContainer.nativeElement;
     const { scrollTop, clientHeight, scrollHeight } = container;
+    console.log(`Scroll Top: ${scrollTop}, Scroll Height: ${scrollHeight}, Client Height: ${clientHeight}`);
 
     const totalLoadedPages = this.currentPagesIn.length;
     const pageHeight = scrollHeight / totalLoadedPages;
@@ -160,22 +174,22 @@ export class PaginationComponent implements OnInit {
     if (currentPageVisible !== undefined && this.currentPage !== currentPageVisible) {
       this.currentPage = currentPageVisible;
     }
+
     const index = this.getIndex(this.currentPagesIn, this.currentPage);
     const previousBoundary = pageHeight * index;
     const nextBoundary = pageHeight * (index + 1);
 
-    if (scrollTop + clientHeight + 1 >= scrollHeight && !this.loading) {
+    if (scrollTop + clientHeight + 1 > scrollHeight && !this.loading) {
       if (this.currentPage < this.totalPages && !this.currentPagesIn.includes(this.currentPage + 1)) {
         this.currentPage += 1;
         this.addPageToCurrentPages(this.currentPage);
         this.loadPosts(true);
-        this.adjustScroll();
       } else if (this.currentPage >= this.totalPages) {
         console.log('End of the page', 'red');
       }
     } else if (
       this.currentPage > 1 &&
-      previousBoundary > scrollTop + clientHeight - 10 &&
+      previousBoundary > scrollTop + clientHeight - 5 &&
       !this.currentPagesIn.includes(this.currentPage - 1)
     ) {
       this.currentPage -= 1;
@@ -184,7 +198,7 @@ export class PaginationComponent implements OnInit {
       this.adjustScroll();
     } else if (
       index < this.currentPagesIn.length &&
-      nextBoundary < scrollTop + clientHeight + 10 &&
+      nextBoundary < scrollTop + clientHeight + 5 &&
       !this.currentPagesIn.includes(this.currentPage + 1)
     ) {
       this.currentPage += 1;
@@ -195,10 +209,17 @@ export class PaginationComponent implements OnInit {
   }
 
   adjustScroll(): void {
+    console.trace();
     const container = this.postsContainer.nativeElement;
+    console.log(`Scroll Height: ${container.scrollHeight}`);
+    console.log(`Current Pages in: ${this.currentPagesIn}`);
+    console.log(`Current Pages: ${this.currentPagesIn.length}`);
     const pageHeight = container.scrollHeight / this.currentPagesIn.length;
+    console.log(`Page Height: ${pageHeight}`);
     const index = this.getIndex(this.currentPagesIn, this.currentPage);
-    container.scrollTop = pageHeight * index + 20;
+    console.log(`Index: ${index}`);
+    console.log(`Required Height: ${pageHeight * index}`);
+    container.scrollTop = (pageHeight * index) + 15;
   }
 
   adjustPaginationScroll(): void {

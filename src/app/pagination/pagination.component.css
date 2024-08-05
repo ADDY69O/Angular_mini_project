@@ -1,98 +1,163 @@
-  /* src/app/post-list/post-list.component.css */
-  .posts {
-      border-top: 1px solid #ccc;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: space-around;  
-      width: 100%;
-      border: 2px solid black;
-      overflow-y: scroll;
-      height: 60vh;
-    }
-    
-    .post {
-      width: 30%;
-      margin: 10px 0 0 10px;
-    }
-    
-    .pagination-controls {
-      margin: 20px 0;
-    }
-    
-    .page-buttons {
-      margin-top: 10px;
-    }
-    
-    .page-buttons button {
-      margin: 0 5px;
-    }
-    
-    .page-buttons .active {
-      background-color: #007bff;
-      color: white;
-    }
-    
+  .container {
+  
+    font-family: Arial, sans-serif;
+  }
 
-    .pagination__btn {
-      display: flex;
-      gap: 12px;
-      width: 300px; /* Fixed width for the container */
-      overflow-x: auto; /* Allow horizontal scrolling */
-      overflow-y: hidden; /* Hide vertical overflow */
-      white-space: nowrap; /* Prevent wrapping */
-      padding: 10px 0; /* Add padding for better spacing */
-    }
-    
-    /* Individual page button */
-    .pages {
-      width: 40px; /* Increased width */
-      height: 40px; /* Increased height */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      cursor: pointer;
-      background-color: #808080; /* Light background color */
-      transition: background-color 0.3s, color 0.3s; /* Smooth transition */
-    }
-    
-    .pages:hover {
-      background-color: #007bff; /* Background color on hover */
-      color: white; /* Text color on hover */
-    }
-    
-    /* Active page button */
-    .pages.active {
-      background-color: #007bff; /* Active page button color */
-      color: white; /* Active text color */
-      font-weight: bold; /* Bold text for active page */
-    }
-    
-    .pagination-controls {
-      margin: 20px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* Center align the controls */
-    }
-    
-    button {
-      padding: 10px 20px; /* Increase padding for better click area */
-      font-size: 16px; /* Increase font size */
-      border: none;
-      border-radius: 5px; /* Rounded corners */
-      background-color: #007bff; /* Button background color */
-      color: white; /* Button text color */
-      cursor: pointer; /* Pointer cursor on hover */
-      transition: background-color 0.3s; /* Smooth transition */
-    }
-    
-    button:disabled {
-      background-color: #808080; /* Disabled button color */
-      cursor: not-allowed; /* Cursor style for disabled button */
-    }
-    
-    button:hover:not(:disabled) {
-      background-color: #0056b3; /* Darker background on hover */
-    }
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+
+  .posts {
+    border-top: 1px solid #ccc;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 98%;
+    border: 2px solid #333;
+    overflow-y: scroll;
+    height: 65vh;
+    background-color: #f9f9f9;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .post {
+    width: 30%;
+    margin: 10px 0 0 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    transition: transform 0.2s;
+  }
+
+  .post:hover {
+    transform: translateY(-5px);
+  }
+
+  .post h2 {
+    color: #007bff;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .post p {
+    color: #666;
+  }
+
+  .post-info {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
+  }
+
+  .tag {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 5px;
+  }
+
+  .reactions {
+    margin-top: 10px;
+  }
+
+  .reaction-icon {
+    margin-right: 5px;
+  }
+
+  .meta-info {
+    margin-top: 10px;
+  }
+
+  .pagination-controls {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .pagination-controls label {
+    font-size: 16px;
+    margin-right: 10px;
+    color: #333;
+  }
+
+  .pagination-controls select {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.3s;
+  }
+
+  .pagination-controls select:hover {
+    border-color: #007bff;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  button:disabled {
+    background-color: #808080;
+    cursor: not-allowed;
+  }
+
+  button:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+
+  button:hover:not(:disabled) {
+    transform: scale(1.05);
+  }
+
+  .pagination__btn {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 300px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    padding: 10px 0;
+  }
+
+  .pages {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #808080;
+    color: white;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .pages:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .pages.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+  }
