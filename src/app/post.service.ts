@@ -13,7 +13,7 @@ export class PostService {
 
   constructor(private http: HttpClient, private cacheService: CacheService) {}
 
-  getPosts(limit: number, skip: number): Observable<any> {
+  getPosts<T>(limit: number, skip: number): Observable<{posts:T[],total:number}> {
     const cacheKey = `${limit}-${skip}`;
     const cachedData = this.cacheService.getCache(cacheKey);
 
