@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { CacheService } from './cache.service';
+import { APIResponse } from './services/api.service';
+import { ProductResponse } from './services/api-calling.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +16,7 @@ export class PostService {
 
   constructor(private http: HttpClient, private cacheService: CacheService) {}
 
-  getPosts<T>(limit: number, skip: number): Observable<{posts:T[],total:number}> {
+  getPosts<T>(limit: number, skip: number): Observable<APIResponse<ProductResponse>> {
     const cacheKey = `${limit}-${skip}`;
     const cachedData = this.cacheService.getCache(cacheKey);
 

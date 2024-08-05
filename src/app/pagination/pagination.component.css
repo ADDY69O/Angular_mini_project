@@ -1,98 +1,98 @@
-/* src/app/post-list/post-list.component.css */
-.posts {
-    border-top: 1px solid #ccc;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;  
-    width: 100%;
-    border: 2px solid black;
-    overflow-y: scroll;
-    height: 60vh;
-  }
-  
-  .post {
-    width: 30%;
-    margin: 10px 0 0 10px;
-  }
-  
-  .pagination-controls {
-    margin: 20px 0;
-  }
-  
-  .page-buttons {
-    margin-top: 10px;
-  }
-  
-  .page-buttons button {
-    margin: 0 5px;
-  }
-  
-  .page-buttons .active {
-    background-color: #007bff;
-    color: white;
-  }
-  
+  /* src/app/post-list/post-list.component.css */
+  .posts {
+      border-top: 1px solid #ccc;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-around;  
+      width: 100%;
+      border: 2px solid black;
+      overflow-y: scroll;
+      height: 60vh;
+    }
+    
+    .post {
+      width: 30%;
+      margin: 10px 0 0 10px;
+    }
+    
+    .pagination-controls {
+      margin: 20px 0;
+    }
+    
+    .page-buttons {
+      margin-top: 10px;
+    }
+    
+    .page-buttons button {
+      margin: 0 5px;
+    }
+    
+    .page-buttons .active {
+      background-color: #007bff;
+      color: white;
+    }
+    
 
-  .pagination__btn {
-    display: flex;
-    gap: 12px;
-    width: 300px; /* Fixed width for the container */
-    overflow-x: auto; /* Allow horizontal scrolling */
-    overflow-y: hidden; /* Hide vertical overflow */
-    white-space: nowrap; /* Prevent wrapping */
-    padding: 10px 0; /* Add padding for better spacing */
-  }
-  
-  /* Individual page button */
-  .pages {
-    width: 40px; /* Increased width */
-    height: 40px; /* Increased height */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #808080; /* Light background color */
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
-  }
-  
-  .pages:hover {
-    background-color: #007bff; /* Background color on hover */
-    color: white; /* Text color on hover */
-  }
-  
-  /* Active page button */
-  .pages.active {
-    background-color: #007bff; /* Active page button color */
-    color: white; /* Active text color */
-    font-weight: bold; /* Bold text for active page */
-  }
-  
-  .pagination-controls {
-    margin: 20px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center align the controls */
-  }
-  
-  button {
-    padding: 10px 20px; /* Increase padding for better click area */
-    font-size: 16px; /* Increase font size */
-    border: none;
-    border-radius: 5px; /* Rounded corners */
-    background-color: #007bff; /* Button background color */
-    color: white; /* Button text color */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s; /* Smooth transition */
-  }
-  
-  button:disabled {
-    background-color: #808080; /* Disabled button color */
-    cursor: not-allowed; /* Cursor style for disabled button */
-  }
-  
-  button:hover:not(:disabled) {
-    background-color: #0056b3; /* Darker background on hover */
-  }
+    .pagination__btn {
+      display: flex;
+      gap: 12px;
+      width: 300px; /* Fixed width for the container */
+      overflow-x: auto; /* Allow horizontal scrolling */
+      overflow-y: hidden; /* Hide vertical overflow */
+      white-space: nowrap; /* Prevent wrapping */
+      padding: 10px 0; /* Add padding for better spacing */
+    }
+    
+    /* Individual page button */
+    .pages {
+      width: 40px; /* Increased width */
+      height: 40px; /* Increased height */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #808080; /* Light background color */
+      transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+    }
+    
+    .pages:hover {
+      background-color: #007bff; /* Background color on hover */
+      color: white; /* Text color on hover */
+    }
+    
+    /* Active page button */
+    .pages.active {
+      background-color: #007bff; /* Active page button color */
+      color: white; /* Active text color */
+      font-weight: bold; /* Bold text for active page */
+    }
+    
+    .pagination-controls {
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Center align the controls */
+    }
+    
+    button {
+      padding: 10px 20px; /* Increase padding for better click area */
+      font-size: 16px; /* Increase font size */
+      border: none;
+      border-radius: 5px; /* Rounded corners */
+      background-color: #007bff; /* Button background color */
+      color: white; /* Button text color */
+      cursor: pointer; /* Pointer cursor on hover */
+      transition: background-color 0.3s; /* Smooth transition */
+    }
+    
+    button:disabled {
+      background-color: #808080; /* Disabled button color */
+      cursor: not-allowed; /* Cursor style for disabled button */
+    }
+    
+    button:hover:not(:disabled) {
+      background-color: #0056b3; /* Darker background on hover */
+    }
