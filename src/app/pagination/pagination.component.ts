@@ -36,7 +36,10 @@ export class PaginationComponent implements OnInit, OnDestroy {
     // Debounce the scroll event handler
     const scroll$ = fromEvent(this.postsContainer.nativeElement, 'scroll');
     this.scrollSubscription = scroll$.pipe(
-      debounceTime(300)  // Debounce with a delay of 300ms
+      
+      debounceTime(100)
+      
+      // Debounce with a delay of 300ms
     ).subscribe(() => this.onScroll());
   }
 
@@ -84,7 +87,7 @@ export class PaginationComponent implements OnInit, OnDestroy {
         if (!this.currentPagesIn.includes(this.currentPage)) {
           this.addPageToCurrentPages(this.currentPage);
         }
-
+        console.log(this.currentPagesIn + "array ✔️✔️✔️")
         // Delay the scroll adjustment to ensure data is loaded
         setTimeout(() => {
           this.adjustPaginationScroll();
@@ -104,6 +107,9 @@ export class PaginationComponent implements OnInit, OnDestroy {
     if (target) {
       const newSize = +target.value;
       this.updatePagesOnPageSizeChange(newSize, this.pageSize);
+      this.totalPages = Math.ceil(this.totalPosts / this.pageSize);
+      this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+      this.adjustPaginationScroll()
     } else {
       console.error('Event target is not an HTMLSelectElement');
     }
@@ -173,6 +179,7 @@ export class PaginationComponent implements OnInit, OnDestroy {
 
     if (currentPageVisible !== undefined && this.currentPage !== currentPageVisible) {
       this.currentPage = currentPageVisible;
+      this.adjustPaginationScroll()
     }
 
     const index = this.getIndex(this.currentPagesIn, this.currentPage);
@@ -189,7 +196,7 @@ export class PaginationComponent implements OnInit, OnDestroy {
       }
     } else if (
       this.currentPage > 1 &&
-      previousBoundary > scrollTop + clientHeight - 5 &&
+      previousBoundary > scrollTop + clientHeight - 25 &&
       !this.currentPagesIn.includes(this.currentPage - 1)
     ) {
       this.currentPage -= 1;
@@ -198,7 +205,7 @@ export class PaginationComponent implements OnInit, OnDestroy {
       this.adjustScroll();
     } else if (
       index < this.currentPagesIn.length &&
-      nextBoundary < scrollTop + clientHeight + 5 &&
+      nextBoundary < scrollTop + clientHeight + 15 &&
       !this.currentPagesIn.includes(this.currentPage + 1)
     ) {
       this.currentPage += 1;
@@ -238,15 +245,16 @@ export class PaginationComponent implements OnInit, OnDestroy {
     const remainder = loadedRecords % newLimit;
 
     let newPages: number[] = [];
-    let pagesRequired = loadedRecords / newLimit;
-
+    let pagesRequired = Math.floor(loadedRecords / newLimit);
+    console.log("Pages Required : " + pagesRequired);
     if (loadedRecords < newLimit) {
       let remainingRecord = newLimit % loadedRecords;
-
+      
       this.loadPosts(true, true, remainingRecord, loadedRecords);
       newPages.push(1);
       this.currentPage = 1;
     } else {
+      console.log("Inside");
       for (let i = 0; i < pagesRequired; i++) {
         let curentInPage = this.currentPagesIn[i];
         const page = i + 1;

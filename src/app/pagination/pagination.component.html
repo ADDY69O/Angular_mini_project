@@ -20,7 +20,6 @@
         </div>
         <div class="meta-info">
           <span class="views"> <span>🧐</span> Views: {{ post.views }}</span>
-         
         </div>
       </div>
     </div>
@@ -39,5 +38,10 @@
         {{ page }}
       </button>
     </div>
+  </div>
+
+  <!-- Loader Container -->
+  <div class="loader-overlay" *ngIf="loading">
+    <img class="loader" src="https://i.giphy.com/xTk9ZvMnbIiIew7IpW.webp" alt="Loading...">
   </div>
 </div>
