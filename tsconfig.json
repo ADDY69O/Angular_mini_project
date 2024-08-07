@@ -28,5 +28,8 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "styles": [
+  "src/app/assets/styles.css"
+]
 }

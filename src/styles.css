@@ -4,3 +4,18 @@
     margin: 0;
 }
 
+
+
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #0056b3;
+    --text-dark: #333;
+    --text-light: #666;
+    --background-light: #f9f9f9;
+    --border-light: #ccc;
+    --border-dark: #333;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-dark: rgba(0, 0, 0, 0.05);
+    --disabled-color: #808080;
+  }
+  

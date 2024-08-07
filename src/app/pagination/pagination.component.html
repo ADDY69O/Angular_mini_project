@@ -1,12 +1,7 @@
 <div class="container">
   <h1>Posts</h1>
 
-  <div class="pagination-controls">
-    <label for="pageSize">Page Size:</label>
-    <select (change)="onPageSizeChange($event)" id="pageSize">
-      <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
-    </select>
-  </div>
+  
 
   <div class="posts" #postsContainer>
     <div *ngFor="let post of posts" class="post">
@@ -27,16 +22,23 @@
 
   <div class="pagination-controls">
     <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
-    <span>Page {{ currentPage }} of {{ totalPages }}</span>
-    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
-
+   
+    
     <div class="pagination__btn" #paginationContainer>
       <button *ngFor="let page of pages" 
-              class="pages" 
-              (click)="goToPage(page)" 
-              [ngClass]="{'active': page === currentPage}">
-        {{ page }}
-      </button>
+      class="pages" 
+      (click)="goToPage(page)" 
+      [ngClass]="{'active': page === currentPage}">
+      {{ page }}
+    </button>
+  </div>
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+
+    <div class="pageSize">
+      <label for="pageSize">Page Size:</label>
+      <select (change)="onPageSizeChange($event)" id="pageSize">
+        <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+      </select>
     </div>
   </div>
 

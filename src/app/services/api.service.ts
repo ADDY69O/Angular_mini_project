@@ -1,134 +1,89 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
+@Injectable({
+  providedIn: 'root'
+})
 export default class RequestService {
-  private axiosInstance: AxiosInstance;
+  private baseUrl: string = 'https://dummyjson.com/';
 
-  constructor() {
-    // Create an Axios instance
-    this.axiosInstance = axios.create({
-      baseURL: 'https://dummyjson.com/',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      timeout: 3000,
-    });
+  constructor(private http: HttpClient) {}
 
-    // Request interceptor
-    this.axiosInstance.interceptors.request.use(
-      (config: InternalAxiosRequestConfig) => {
-        console.log('Request:', config); // Log or modify the request here
-        // Add authentication tokens or modify headers if needed
-        // config.headers['Authorization'] = `Bearer ${yourToken}`;
-        return config;
-      },
-      (error: AxiosError) => {
-        console.error('Request error:', error);
-        return Promise.reject(error);
-      }
-    );
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = '';
 
-    // Response interceptor
-    this.axiosInstance.interceptors.response.use(
-      (response: AxiosResponse) => {
-        console.log('Response:', response); // Log or process the response here
-        return response;
-      },
-      (error: AxiosError) => {
-        console.error('Response error:', error);
-        // Handle specific error statuses or transform the error
-        if (error.response?.status === 401) {
-          // Handle unauthorized errors, e.g., redirect to login
-        }
-        return Promise.reject(error);
-      }
-    );
-  }
-
-  private async makeRequest<T>(
-    method: 'get' | 'post' | 'put' | 'patch' | 'delete',
-    endpoint: string,
-    data?: T,
-    header?: Record<string, any>,
-  ): Promise<APIResponse<T>> {
-    try {
-      const response: AxiosResponse<APIResponse<T>> = await this.axiosInstance.request({
-        method,
-        url: endpoint,
-        headers: {
-          ...header,
-        },
-        data: (header?.['Content-Type'] === 'multipart/form-data'
-          ? data
-          : JSON.stringify(data)) as T,
-      });
-
-      console.log(response);
-
-      return response.data;
-    } catch (error: any) {
-      // handle this..........
-      // console.log(error.toString());
-      if ([401].includes(error?.response?.status)) {
-        throw new Error('Unauthorized');
-      } else {
-        if (error.response && error.response.data) {
-          // If there's an error message from the server, return it
-          let errorMessage = '';
-          if (
-            error.response.data?.errors &&
-            Object.keys(error.response.data?.errors)?.length
-          ) {
-            errorMessage =
-              (Object.values(error.response.data.errors) as string[])[0] ?? '';
-          } else {
-            errorMessage = error.response.data.message;
-          }
-
-          throw new Error(errorMessage);
-        } else {
-          // If no specific error message from the server, throw a generic error
-          throw new Error(error?.message);
-        }
-      }
+    if (error.error instanceof ErrorEvent) {
+      // Client-side or network error
+      errorMessage = `An error occurred: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage = `Server returned code: ${error.status}, error message is: ${error.message}`;
     }
+
+    return throwError(errorMessage);
   }
 
-  protected async get<T>(
-    endpoint: string,
-    data?:T,
-    header?: Record<string, string>,
-  ): Promise<APIResponse<T>> {
-    return this.makeRequest('get', endpoint, data, header);
-  }
-
-  protected async post<T>(
+  private makeRequest<T>(
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
     endpoint: string,
     data?: T,
-    header?: Record<string, any>,
-  ): Promise<APIResponse<T>> {
-    return this.makeRequest('post', endpoint, data, header);
+    headers?: HttpHeaders
+  ): Observable<APIResponse<T>> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const options = { headers: headers || new HttpHeaders({ 'Content-Type': 'application/json' }) };
+    
+    return this.http.request<APIResponse<T>>(method, url, {
+      body: data,
+      ...options
+    }).pipe(
+      map(response => {
+        console.log('Response:', response);
+        return response;
+      }),
+      catchError(this.handleError)
+    );
   }
 
-  protected async delete<T>(
+  protected get<T>(
     endpoint: string,
     data?: T,
-  ): Promise<APIResponse<T>> {
-    return this.makeRequest('delete', endpoint, data);
+    headers?: HttpHeaders
+  ): Observable<APIResponse<T>> {
+    return this.makeRequest('GET', endpoint, data, headers);
   }
 
-  protected async put<T>(
+  protected post<T>(
     endpoint: string,
-    data?: any,
-    header?: Record<string, any>,
-  ): Promise<APIResponse<T>> {
-    return this.makeRequest('put', endpoint, data, header);
+    data?: T,
+    headers?: HttpHeaders
+  ): Observable<APIResponse<T>> {
+    return this.makeRequest('POST', endpoint, data, headers);
   }
 
-  protected async patch<T>(
+  protected delete<T>(
     endpoint: string,
-    data?: any,
-  ): Promise<APIResponse<T>> {
-    return this.makeRequest('patch', endpoint, data);
+    data?: T,
+    headers?: HttpHeaders
+  ): Observable<APIResponse<T>> {
+    return this.makeRequest('DELETE', endpoint, data, headers);
+  }
+
+  protected put<T>(
+    endpoint: string,
+    data?: T,
+    headers?: HttpHeaders
+  ): Observable<APIResponse<T>> {
+    return this.makeRequest('PUT', endpoint, data, headers);
+  }
+
+  protected patch<T>(
+    endpoint: string,
+    data?: T,
+    headers?: HttpHeaders
+  ): Observable<APIResponse<T>> {
+    return this.makeRequest('PATCH', endpoint, data, headers);
   }
 }
 
